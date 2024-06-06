@@ -5,6 +5,9 @@ services:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
     network_mode: bridge
+    depends_on:
+      - zwavejs2mqtt
+      - postgres
     environment:
       - PUID=1000
       - PGID=1000
