@@ -4,13 +4,13 @@ services:
   homeassistant:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
-    network_mode: host
+    network_mode: bridge
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
     volumes:
-      - /home/tobi/projects/home-assistant/ha_volume:/config
+      - /home/tobi/home-assistant/ha_volume:/config
     ports:
       - 8123:8123
      # devices:
@@ -34,7 +34,7 @@ services:
       # Instead, use the /dev/serial/by-id/X serial device for your Z-Wave stick.
       - '/dev/serial/by-id/usb-0658_0200-if00:/dev/zwave'
     volumes:
-      - /home/tobi/projects/home-assistant/zwave_volume:/usr/src/app/store
+      - /home/tobi/home-assistant/zwave_volume:/usr/src/app/store
     ports:
       - "8091:8091" # port for web interface
       - "3000:3000" # port for Z-Wave JS websocket server
@@ -46,7 +46,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - /home/tobi/projects/home-assistant/postgres:/var/lib/postgresql/data
+      - /home/tobi/home-assistant/postgres:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
     environment:
       - POSTGRES_DB=homeassistant
@@ -67,7 +67,7 @@ services:
     ports:
       - 8086:8086
     volumes:
-      - /home/tobi/projects/home-assistant/influxdb:/var/lib/influxdb2
+      - /home/tobi/home-assistant/influxdb:/var/lib/influxdb2
 
   grafana:
     container_name: grafana
@@ -81,7 +81,7 @@ services:
     ports:
       - 8125:3000
     volumes:
-      - /home/tobi/projects/home-assistant/grafana:/var/lib/grafana
+      - /home/tobi/home-assistant/grafana:/var/lib/grafana
 
   mosquitto:
     container_name: mosquitto
@@ -91,9 +91,9 @@ services:
       - 1883:1883
       - 1884:1884
     volumes:
-      - /home/tobi/projects/home-assistant/mosquitto/config:/mosquitto/config
-      - /home/tobi/projects/home-assistant/mosquitto/data:/mosquitto/data
-      - /home/tobi/projects/home-assistant/mosquitto/log:/mosquitto/log
+      - /home/tobi/home-assistant/mosquitto/config:/mosquitto/config
+      - /home/tobi/home-assistant/mosquitto/data:/mosquitto/data
+      - /home/tobi/home-assistant/mosquitto/log:/mosquitto/log
     environment:
       - TZ=Europe/Berlin
 
@@ -104,7 +104,7 @@ services:
     ports:
       - 1880:1880
     volumes:
-      - /home/tobi/projects/home-assistant/nodered:/data
+      - /home/tobi/home-assistant/nodered:/data
     depends_on:
       - homeassistant
       - mosquitto
