@@ -11,7 +11,7 @@
   
 ```
 recorder:
-  db_url: postgresql://<db_user>:<db_password>@192.168.0.91:5432/homeassistant
+  db_url: postgresql://<db_user>:<db_password>@<db_host>:<port>/<db_name>
   db_retry_wait: 15
 ```
 
