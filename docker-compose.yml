@@ -53,8 +53,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       - POSTGRES_DB=homeassistant
-      - POSTGRES_USER=homeassistant
-      - POSTGRES_PASSWORD=test
+      - POSTGRES_USER="${POSTGRES_USER}"
+      - POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
 
   influxdb:
     container_name: influxdb
@@ -63,8 +63,8 @@ services:
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - INFLUXDB_DB=home_assistant
-      - DOCKER_INFLUXDB_INIT_USERNAME=influx_user
-      - DOCKER_INFLUXDB_INIT_PASSWORD=password
+      - DOCKER_INFLUXDB_INIT_USERNAME="${INFLUXDB_USERNAME}"
+      - DOCKER_INFLUXDB_INIT_PASSWORD="${INFLUXDB_PASSWORD}"
       - DOCKER_INFLUXDB_INIT_ORG=ha-org
       - DOCKER_INFLUXDB_INIT_BUCKET=ha-bucket
     ports:
@@ -79,8 +79,8 @@ services:
     depends_on:
       - influxdb
     environment:
-      - GF_SECURITY_ADMIN_USER=grafana_user
-      - GF_SECURITY_ADMIN_PASSWORD=password
+      - GF_SECURITY_ADMIN_USER="${GRAFANA_USER}"
+      - GF_SECURITY_ADMIN_PASSWORD="${GRAFANA_PASSWORD}"
     ports:
       - 8125:3000
     volumes:
