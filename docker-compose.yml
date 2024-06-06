@@ -54,7 +54,7 @@ services:
       - POSTGRES_PASSWORD=test
 
   influxdb:
-    container_name: influxdb 
+    container_name: influxdb
     image: influxdb:latest
     restart: always
     environment:
@@ -95,7 +95,7 @@ services:
       - /home/tobi/projects/home-assistant/mosquitto/data:/mosquitto/data
       - /home/tobi/projects/home-assistant/mosquitto/log:/mosquitto/log
     environment:
-      - TZ: "Europe/Berlin"
+      - TZ=Europe/Berlin
 
   nodered:
     container_name: nodered
@@ -106,7 +106,7 @@ services:
     volumes:
       - /home/tobi/projects/home-assistant/nodered:/data
     depends_on:
-      - home-assistant
+      - homeassistant
       - mosquitto
     environment:
-      - TZ: "Europe/Berlin"
+      - TZ=Europe/Berlin
