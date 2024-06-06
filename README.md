@@ -5,7 +5,7 @@
 4. start container via `docker compose up -d`
 5. To restart a specific Container execute `docker restart <containerID>`
 
-# HA => PSQL
+# HA -> PSQL
 
 1. Add the following to the `configuration.yaml` of Homeassistant
   
