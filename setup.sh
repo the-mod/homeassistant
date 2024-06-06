@@ -6,6 +6,9 @@ dirs=(
     "$HOME/home-assistant/zwave_volume"
     "$HOME/home-assistant/postgres"
     "$HOME/home-assistant/grafana"
+    "$HOME/home-assistant/influxdb"
+    "$HOME/home-assistant/mosquitto"
+    "$HOME/home-assistant/nodered"
 )
 
 # Loop through the directories
