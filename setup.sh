@@ -3,6 +3,7 @@
 # List of directories to be created
 dirs=(
     "$HOME/home-assistant/ha_volume"
+    "$HOME/home-assistant/esphome"
     "$HOME/home-assistant/zwave_volume"
     "$HOME/home-assistant/postgres"
     "$HOME/home-assistant/grafana"

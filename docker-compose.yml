@@ -20,6 +20,22 @@ services:
      # - /path/to/device:/path/to/device #optional
     restart: unless-stopped
 
+  esphome:
+    container_name: esphome
+    image: esphome/esphome
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /home/tobi/home-assistant/esphome/config:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+    ports:
+      - 6052:6052
+
   zwavejs2mqtt:
     container_name: zwavejs2mqtt
     image: zwavejs/zwavejs2mqtt:latest

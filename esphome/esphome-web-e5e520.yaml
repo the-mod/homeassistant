@@ -1,0 +1,121 @@
+substitutions:
+  name: esphome-web-e5e520
+  friendly_name: Ventilation-temps
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2024.6.0
+  name_add_mac_suffix: false
+  project:
+    name: esphome.web
+    version: dev
+
+esp32:
+  board: az-delivery-devkit-v4
+  framework:
+    type: arduino
+
+one_wire:
+  - platform: gpio
+    id: ventialtion_bus
+    pin:
+      number: GPIO13
+    #mode:
+    #  input: true
+    #  pullup: true
+
+sensor:
+  # DS18b20
+  - platform: dallas_temp
+    address: 0xbb3e20d446bd4c28
+    name: "Lichtschachttemperatur"
+    id: lightshaft_temp
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-minus"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 2
+    one_wire_id: ventialtion_bus
+    update_interval: 300s
+  # DS18b20
+  - platform: dallas_temp
+    address: 0x2d03b4d4461e8628
+    name: "Außentemperatur"
+    id: outside_temp
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-minus"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 2
+    one_wire_id: ventialtion_bus
+    update_interval: 60s
+  # DS18b20
+  - platform: dallas_temp
+    address: 0x4110a2d446d88328
+    name: "Ablufttemperatur"
+    id: exhaust_temp
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-minus"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 2
+    one_wire_id: ventialtion_bus
+    update_interval: 60s
+  # DS18b20
+  - platform: dallas_temp
+    address: 0xda1dfed446627728
+    name: "Zulufttemperatur"
+    id: supply_temp
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-minus"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 2
+    one_wire_id: ventialtion_bus
+    update_interval: 300s
+  # DS18b20
+  - platform: dallas_temp
+    address: 0x15605ad446a33028
+    name: "Innentemperatur"
+    id: inside_temp
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-minus"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 2
+    one_wire_id: ventialtion_bus
+    update_interval: 60s
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+# Allow Over-The-Air updates
+ota:
+- platform: esphome
+
+# Allow provisioning Wi-Fi via serial
+improv_serial:
+
+wifi:
+  # Set up a wifi access point
+  ap: {}
+
+# In combination with the `ap` this allows the user
+# to provision wifi credentials to the device via WiFi AP.
+captive_portal:
+
+dashboard_import:
+  package_import_url: github://esphome/example-configs/esphome-web/esp32.yaml@main
+  import_full_config: true
+
+# Sets up Bluetooth LE (Only on ESP32) to allow the user
+# to provision wifi credentials to the device.
+esp32_improv:
+  authorizer: none
+
+# To have a "next url" for improv serial
+web_server:

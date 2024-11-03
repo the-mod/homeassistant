@@ -1,0 +1,99 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+#camera: !include camera.yaml
+
+sensor:
+  - platform: command_line
+    name: CPU Temp
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    unit_of_measurement: "°C"
+    value_template: '{{ value | multiply(0.001) | round(2) }}'
+
+template:
+  - binary_sensor:
+    - name: heatpump_state
+      unique_id: heatpump_state
+      state: >
+        {% set consumption = states('sensor.metered_wall_plug_switch_power') | int %}
+        {{ 'off' if consumption < 4 else 'on' }}
+
+    - name: power_independence_state
+      unique_id: power_independence_state
+      state: >
+        {% set producer = states('sensor.solar_power') | int %}
+        {% set consumer = states('sensor.power_consumers') | int %}
+        {% set diff = producer - consumer | int %}
+        {{ 'off' if diff < 0 else 'on' }}
+
+  - sensor:
+    - name: "Power Consumers"
+      unique_id: "power_consumers"
+      unit_of_measurement: "W"
+      state: >
+        {{
+          states('sensor.metered_wall_plug_switch_power_3') | float +
+          states('sensor.metered_wall_plug_switch_power_2') | float +
+          states('sensor.metered_wall_plug_switch_power') | float +
+          states('sensor.metered_wall_plug_switch_power_4') | float +
+          states('sensor.metered_wall_plug_switch_power_5') | float
+         }}
+
+    - name: "Solar Power"
+      unique_id: "solar_power"
+      unit_of_measurement: "W"
+      state: >
+        {% set balcony = states('sensor.shelly_balkon_switch_0_power') | float %}
+        {% set garden  = states('sensor.shelly_garten_switch_0_power') | float %}
+        {{ garden + balcony  }}
+
+    - name: "Taupunkt Keller"
+      unique_id: "basement_dew_point"
+      unit_of_measurement: "°C"
+      state: >
+        {% set temp = states('sensor.basement_htg3_temperature') | float %}
+        {% set rh = states('sensor.basement_htg3_humidity') | float %}
+        {% set K2 = 17.62 | float %}
+        {% set K3 = 243.12 | float %}
+        {{ (K3 * ((K2*temp)/(K3+temp) + log(rh/100)) / ((K2*K3)/(K3+temp) - log(rh/100)))  | round(1) }}
+
+    - name: "Taupunkt Küche"
+      unique_id: "kitchen_dew_point"
+      unit_of_measurement: "°C"
+      state: >
+        {% set temp = states('sensor.kitchen_htg3_temperature') | float %}
+        {% set rh = states('sensor.kitchen_htg3_humidity') | float %}
+        {% set K2 = 17.62 | float %}
+        {% set K3 = 243.12 | float %}
+        {{ (K3 * ((K2*temp)/(K3+temp) + log(rh/100)) / ((K2*K3)/(K3+temp) - log(rh/100)))  | round(1) }}
+
+    - name: "Taupunkt Office"
+      unique_id: "office_dew_point"
+      unit_of_measurement: "°C"
+      state: >
+        {% set temp = states('sensor.office_htg3_temperature') | float %}
+        {% set rh = states('sensor.office_htg3_humidity') | float %}
+        {% set K2 = 17.62 | float %}
+        {% set K3 = 243.12 | float %}
+        {{ (K3 * ((K2*temp)/(K3+temp) + log(rh/100)) / ((K2*K3)/(K3+temp) - log(rh/100)))  | round(1) }}
+
+    - name: "Taupunkt Bad"
+      unique_id: "bathroom_dew_point"
+      unit_of_measurement: "°C"
+      state: >
+        {% set temp = states('sensor.bathroom_htg3_temperature') | float %}
+        {% set rh = states('sensor.bathroom_htg3_humidity') | float %}
+        {% set K2 = 17.62 | float %}
+        {% set K3 = 243.12 | float %}
+        {{ (K3 * ((K2*temp)/(K3+temp) + log(rh/100)) / ((K2*K3)/(K3+temp) - log(rh/100)))  | round(1) }}
