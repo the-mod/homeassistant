@@ -106,7 +106,7 @@ services:
     image: prom/prometheus
     volumes:
       - /home/tobi/home-assistant/prometheus:/etc/prometheus
-      - /home/tobi/home-assistant/promethues/data:/prometheus
+      - /home/tobi/home-assistant/prometheus/data:/prometheus
     ports:
       - 9090:9090
 
