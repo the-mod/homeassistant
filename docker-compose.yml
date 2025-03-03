@@ -102,6 +102,14 @@ services:
     volumes:
       - /home/tobi/home-assistant/grafana:/var/lib/grafana
 
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - /home/tobi/home-assistant/prometheus:/etc/prometheus
+      - /home/tobi/home-assistant/promethues/data:/prometheus
+    ports:
+      - 9090:9090
+
   mosquitto:
     container_name: mosquitto
     image: eclipse-mosquitto
