@@ -14,6 +14,10 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 #camera: !include camera.yaml
 
+
+prometheus:
+  namespace: homeassistant
+
 sensor:
   - platform: command_line
     name: CPU Temp
@@ -43,11 +47,15 @@ template:
       unit_of_measurement: "W"
       state: >
         {{
-          states('sensor.metered_wall_plug_switch_power_3') | float +
-          states('sensor.metered_wall_plug_switch_power_2') | float +
-          states('sensor.metered_wall_plug_switch_power') | float +
-          states('sensor.metered_wall_plug_switch_power_4') | float +
-          states('sensor.metered_wall_plug_switch_power_5') | float
+          states('sensor.metered_wall_plug_switch_power_3') | float(0) +
+          states('sensor.metered_wall_plug_switch_power_2') | float(0) +
+          states('sensor.metered_wall_plug_switch_power')   | float(0) +
+          states('sensor.metered_wall_plug_switch_power_4') | float(0) +
+          states('sensor.metered_wall_plug_switch_power_5') | float(0) +
+          states('sensor.metered_wall_plug_switch_power_7') | float(0) +
+          states('sensor.metered_wall_plug_switch_power_6') | float(0) +
+          states('sensor.shellyplusplugs_b0b21c0e7230_switch_0_power') | float(0) +
+          states('sensor.playground_switch_0_power') | float(0)
          }}
 
     - name: "Solar Power"
@@ -57,6 +65,16 @@ template:
         {% set balcony = states('sensor.shelly_balkon_switch_0_power') | float %}
         {% set garden  = states('sensor.shelly_garten_switch_0_power') | float %}
         {{ garden + balcony  }}
+
+    - name: "Taupunkt Waschküche"
+      unique_id: "laundry_dew_point"
+      unit_of_measurement: "°C"
+      state: >
+         {% set temp = states('sensor.laundry_htg3_temperature') | float %}
+         {% set rh = states('sensor.laundry_htg3_humidity') | float %}
+         {% set K2 = 17.62 | float %}
+         {% set K3 = 243.12 | float %}
+         {{ (K3 * ((K2*temp)/(K3+temp) + log(rh/100)) / ((K2*K3)/(K3+temp) - log(rh/100)))  | round(1) }}
 
     - name: "Taupunkt Keller"
       unique_id: "basement_dew_point"
@@ -94,6 +112,16 @@ template:
       state: >
         {% set temp = states('sensor.bathroom_htg3_temperature') | float %}
         {% set rh = states('sensor.bathroom_htg3_humidity') | float %}
+        {% set K2 = 17.62 | float %}
+        {% set K3 = 243.12 | float %}
+        {{ (K3 * ((K2*temp)/(K3+temp) + log(rh/100)) / ((K2*K3)/(K3+temp) - log(rh/100)))  | round(1) }}
+
+    - name: "Taupunkt Schlafzimmer"
+      unique_id: "bedroom_dew_point"
+      unit_of_measurement: "°C"
+      state: >
+        {% set temp = states('sensor.bedroom_htg3_temperature') | float %}
+        {% set rh = states('sensor.bedroom_htg3_humidity') | float %}
         {% set K2 = 17.62 | float %}
         {% set K3 = 243.12 | float %}
         {{ (K3 * ((K2*temp)/(K3+temp) + log(rh/100)) / ((K2*K3)/(K3+temp) - log(rh/100)))  | round(1) }}
